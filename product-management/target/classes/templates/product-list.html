@@ -156,8 +156,19 @@
     <div class="actions">
         <a th:href="@{/products/new}" class="btn btn-primary">➕ Add New Product</a>
 
-        <form th:action="@{/products/search}" method="get" class="search-form">
+        <form th:action="@{/products}" method="get" class="search-form">
+            <select name="category">
+                <option value="">All Categories</option>
+                <option th:each="cat : ${categories}"
+                        th:value="${cat}"
+                        th:text="${cat}"
+                        th:selected="${cat == selectedCategory}">
+                </option>
+            </select>
             <input type="text" name="keyword" th:value="${keyword}" placeholder="Search products..." />
+            <!-- Hidden fields to preserve sorting -->
+            <input type="hidden" name="sortBy" th:value="${sortBy}" />
+            <input type="hidden" name="sortDir" th:value="${sortDir}" />
             <button type="submit" class="btn btn-primary">🔍 Search</button>
         </form>
     </div>
@@ -169,10 +180,20 @@
             <tr>
                 <th>ID</th>
                 <th>Code</th>
-                <th>Name</th>
+                <th>
+                    <a th:href="@{/products(sortBy='name',sortDir=${sortDir=='asc'?'desc':'asc'},keyword=${keyword},category=${selectedCategory})}">
+                        Name
+                        <span th:if="${sortBy=='name'}" th:text="${sortDir=='asc'?'↑':'↓'}"></span>
+                    </a>
+                </th>
                 <th>Price</th>
                 <th>Quantity</th>
-                <th>Category</th>
+                <th>
+                    <a th:href="@{/products(sortBy='category',sortDir=${sortDir=='asc'?'desc':'asc'},keyword=${keyword},category=${selectedCategory})}">
+                        Category
+                        <span th:if="${sortBy=='category'}" th:text="${sortDir=='asc'?'↑':'↓'}"></span>
+                    </a>
+                </th>
                 <th>Actions</th>
             </tr>
             </thead>
